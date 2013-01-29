@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<link rel="dns-prefetch" href="http://frontend.e-sites.nl">
+		<title>jQuery Populate plugin</title>
+		<meta name="description" content="Small plugin that populates a select element with option nodes. This can be either an object literal, a HTML fragment or a serialized string">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="author" title="Boye Oomens" href="http://www.linkedin.com/in/boyeoomens">
+		<link rel="stylesheet" href="http://frontend.e-sites.nl/library/min/?g=css&1357562300">
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="/"><img src="http://frontend.e-sites.nl/img/esites.png" alt="e-sites"> e-sites</a>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li class="active"><a href="/">Home</a></li>
+						<li><a href="http://e-sites.net/bureau.html" hreflang="nl">About</a></li>
+					</ul>
+				</div>
+				</div>
+			</div>
+		</div>
+		<div class="container" style="padding-top:20px;">
+			<h1>jQuery populate plugin</h1>
+			<ul class="nav nav-tabs" id="tab-nav">
+			  <li><a href="#home" data-toggle="tab">About</a></li>
+			  <li><a href="#implement" data-toggle="tab">Implementation</a></li>
+			  <li><a href="#demos" data-toggle="tab">Demo's</a></li>
+			  <li><a href="#unittests" data-toggle="tab">Unit tests</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="home">
+					<p>We all have used them, <code>&lt;select&gt;</code> elements that are populated by selecting the value of another <code>&lt;select&gt;</code> element. I found myself writing this logic over and over again, so I decided to write this small jQuery plugin as abstraction.</p>
+				</div>
+				<div class="tab-pane" id="implement">
+					<h2>Implementation</h2>
+					<h3>HTML</h3>
+<pre class="prettyprint">&lt;select name=&quot;categories&quot; id=&quot;categories&quot;&gt;
+	&lt;option value=&quot;&quot;&gt;Main categories&lt;/option&gt;
+	&lt;option value=&quot;a&quot;&gt;Category A&lt;/option&gt;
+	&lt;option value=&quot;b&quot;&gt;Category B&lt;/option&gt;
+	&lt;option value=&quot;c&quot;&gt;Category C&lt;/option&gt;
+	&lt;option value=&quot;d&quot;&gt;Category D&lt;/option&gt;
+	&lt;option value=&quot;e&quot;&gt;Category E&lt;/option&gt;
+&lt;/select&gt;
+&lt;select disabled=&quot;disabled&quot; name=&quot;subcategories&quot; id=&quot;subcategories&quot;&gt;
+	&lt;option value=&quot;&quot;&gt;Select a main category first&lt;/option&gt;
+&lt;/select&gt;</pre>
+					<h3>JavaScript</h3>
+<pre class="prettyprint">// Our fake subcategories object literal (most of the times this will be a JSON repsonse from an AJAX call)
+var subcats = {
+	'a': {
+		'aa': 'Subcategory AA',
+		'bb': 'Subcategory BB',
+		'cc': 'Subcategory CC'
+	},
+	'b': {
+		'dd': 'Subcategory DD',
+		'ee': 'Subcategory EE',
+		'ff': 'Subcategory FF'
+	}
+};
+
+$('#categories').on('change', function () {
+    if ( !subcats.hasOwnProperty(this.value) ) {
+        return;
+    }
+    $('#subcategories').populate( subcats[this.value] );
+});</pre>
+				<p><em>Please note that you most likely also want to listen to the keyup event, this way keyboard minded users will benefit as well.</em></p>
+			</div>
+			<div class="tab-pane" id="demos">			
+				<h2>Demos</h2>
+				<form method="POST">
+					<fieldset>
+						<h3>Pass object literal</h3>
+						<select name="categories" id="categories">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+							<option value="c">Category C</option>
+							<option value="d">Category D</option>
+							<option value="e">Category E</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories">
+							<option value="">Select a main category first</option>
+						</select>
+<pre class="prettyprint">$('#subcategories').populate({
+    'key1': 'value1',
+    'key2': 'value2'
+});</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Pass serialized string to build the options nodes with</h3>
+						<select name="categories" id="categories2">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+							<option value="c">Category C</option>
+							<option value="d">Category D</option>
+							<option value="e">Category E</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories2">
+							<option value="">Select a main category first</option>
+						</select>
+<pre class="prettyprint">$('#subcategories').populate('aa=Subcategory+AA&amp;bb=Subcategory+BB&amp;cc=Subcategory+CC');</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Pass HTML fragment directly</h3>
+						<select name="categories" id="categories3">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+							<option value="c">Category C</option>
+							<option value="d">Category D</option>
+							<option value="e">Category E</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories3">
+							<option value="">Select a main category first</option>
+						</select>
+<pre class="prettyprint">$('#subcategories').populate('&lt;option value=&quot;aa&quot;&gt;Subcategory AA&lt;/option&gt;&lt;option value=&quot;bb&quot;&gt;Subcategory BB&lt;/option&gt;&lt;option value=&quot;cc&quot;&gt;Subcategory CC&lt;/option&gt;');</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Enable submit button onPopulate</h3>
+						<select name="categories" id="categories4">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+							<option value="c">Category C</option>
+							<option value="d">Category D</option>
+							<option value="e">Category E</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories4">
+							<option value="">Select a main category first</option>
+						</select>
+						<input type="submit" value="Submit form" disabled="disabled" class="btn">
+<pre class="prettyprint">$('#subcategories4').populate( subcats, {
+    onPopulate: function () {
+        // `this` is a reference to the target element
+        $(this).next().removeAttr('disabled');
+    }
+});</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Select a specific option node when populated</h3>
+						<select name="categories" id="categories5">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+							<option value="c">Category C</option>
+							<option value="d">Category D</option>
+							<option value="e">Category E</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories5">
+							<option value="">Select a main category first</option>
+						</select>
+<pre class="prettyprint">$('#subcategories5').populate( subcats, {
+    select: ':eq(1)'
+});</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Exclude the first option node when populating</h3>
+						<select name="categories" id="categories6">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+							<option value="c">Category C</option>
+							<option value="d">Category D</option>
+							<option value="e">Category E</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories6">
+							<option value="">Select a main category first (exclude)</option>
+						</select>
+<pre class="prettyprint">$('#subcategories6').populate( subcats, {
+    exclude: ':first'
+});</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Handle empty result sets</h3>
+						<select name="categories" id="categories7">
+							<option value="">Main categories</option>
+							<option value="d">Category D</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories7">
+							<option value="">Select a main category first</option>
+						</select>
+<pre class="prettyprint">$('#subcategories7').populate( subcats, {
+    onPopulate: function (opts) {
+    	// Opts is a reference to the result set (always an array)
+       if ( !opts.length ) {
+           $(this).attr('disabled', 'disabled').append('&lt;option&gt;no subcategories available&lt;/option&gt;');
+       }
+    }
+});</pre>
+					</fieldset>
+				</form>
+				</div>
+				<div class="tab-pane" id="unittests">
+					<h2>Unit tests</h2>
+					<object data="tests/index.html" id="testsuite" width="100%" height="650"></object>
+				</div>
+			</div>
+		</div>	
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script src="http://frontend.e-sites.nl/library/min/?g=js&1355489554"></script>
+		<script src="jquery.populate.js"></script>
+		<script src="assets/events.js"></script>
+	</body>
+</html>
