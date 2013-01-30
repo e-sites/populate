@@ -34,7 +34,7 @@
 			$('#subcategories').populate( subcats[this.value] );
 		});
 
-		// Most simple plugin call
+		// Pass serialized string
 		$('#categories2').on('change', function () {
 			if ( !subcats.hasOwnProperty(this.value) ) {
 				return;
@@ -42,7 +42,7 @@
 			$('#subcategories2').populate( $.param( subcats[this.value] ) );
 		});
 
-		// Use onPopulate to enable submit button
+		// Pass HTML fragment
 		$('#categories3').on('change', function () {
 			var opts = '',
 				k;
@@ -77,7 +77,7 @@
 				return;
 			}
 			$('#subcategories5').populate( subcats[this.value], {
-				select: ':eq(1)'
+				select: ':eq(1)' // Accepts any jQuery-proof selector
 			});
 		});
 
@@ -91,19 +91,31 @@
 			});
 		});
 
-		// Most simple plugin call
+		// Handle empty result sets
 		$('#categories7').on('change', function () {
 			if ( !subcats.hasOwnProperty(this.value) ) {
 				return;
 			}
 			$('#subcategories7').populate( subcats[this.value], {
 				onPopulate: function (opts) {
-					// Handle empty results
 					if ( !opts.length ) {
 						$(this).attr('disabled', 'disabled').append('<option>no subcategories available</option>');
 					}
 				}
 			} );
+		});
+
+		// Ajax example
+		$('#categories8').on('change', function () {
+			$.post('http://boye.e-sites.nl/jsend/xhr.php?m=populate', {cat: this.value}, function (resp) {
+				$('#subcategories8').populate(resp.data.subcats, {
+					onPopulate: function (opts) {
+						if ( !opts.length ) {
+							$(this).attr('disabled', 'disabled').append('<option>no subcategories available</option>');
+						}
+					}
+				});
+			});
 		});
 
 	});

@@ -3,11 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="dns-prefetch" href="http://frontend.e-sites.nl">
-		<title>jQuery Populate plugin</title>
-		<meta name="description" content="Small plugin that populates a select element with option nodes. This can be either an object literal, a HTML fragment or a serialized string">
+		<title>jQuery Populate plugin - e-sites</title>
+		<meta name="description" content="A small yet useful jQuery plugin that populates select elements with option nodes. It will accept either an object literal, a HTML fragment or a serialized string.">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="author" title="Boye Oomens" href="http://www.linkedin.com/in/boyeoomens">
 		<link rel="stylesheet" href="http://frontend.e-sites.nl/library/min/?g=css&1357562300">
+		<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+		<script>var _gaq=_gaq||[];_gaq.push(['_setAccount','UA-18924418-1'],['_setDomainName', '.e-sites.nl'],['_trackPageview'],['_trackPageLoadTime']);(function(b,c){var a=b.createElement(c),d=b.getElementsByTagName(c)[0];a.async=a.src='//www.google-analytics.com/ga.js';d.parentNode.insertBefore(a,d)})(document,'script');</script>
 	</head>
 	<body>
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -38,11 +40,42 @@
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="home">
-					<p>We all have used them, <code>&lt;select&gt;</code> elements that are populated by selecting the value of another <code>&lt;select&gt;</code> element. I found myself writing this logic over and over again, so I decided to write this small jQuery plugin as abstraction.</p>
+					<p>We have all used them, <code>&lt;select&gt;</code> elements that are populated by selecting the value of another <code>&lt;select&gt;</code> element. I found myself writing this logic over and over again, so I decided to put together this small jQuery plugin as abstraction.</p>
+					<p>Let me show you a prime example of a dynamically populated <code>&lt;select&gt;</code>:</p>
+				<form method="POST">
+					<fieldset>
+						<select name="categories" id="categories8">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories8">
+							<option value="">Select a main category first</option>
+						</select>
+						<p>With <em>Populate</em> you can achieve this as such:</p>
+<pre class="prettyprint">$('#categories').on('change', function () {	
+    $.post('http://boye.e-sites.nl/jsend/xhr.php?m=populate', {cat: this.value}, function (resp) {
+        $('#subcategories').populate(resp.data.subcats , {
+            onPopulate: function (opts) {
+                // Handle empty results
+                if ( !opts.length ) {
+                    $(this).attr('disabled', 'disabled').append('&lt;option&gt;no subcategories available&lt;/option&gt;');
+                }
+            }
+        });
+    });
+});</pre>
+					</fieldset>
+				</form>					
 				</div>
 				<div class="tab-pane" id="implement">
 					<h2>Implementation</h2>
-					<h3>HTML</h3>
+					<p>First and foremost, include the plugin as such (or lazy-load it, which is actually better for performance):</p>
+<pre class="prettyprint">
+&lt;script src="jquery-1.9.0.min.js"&gt;&lt;/script&gt;
+&lt;script src="jquery.populate.min.js"&gt;&lt;/script&gt;
+</pre>					
+					<p>Prep your HTML markup:</p>
 <pre class="prettyprint">&lt;select name=&quot;categories&quot; id=&quot;categories&quot;&gt;
 	&lt;option value=&quot;&quot;&gt;Main categories&lt;/option&gt;
 	&lt;option value=&quot;a&quot;&gt;Category A&lt;/option&gt;
@@ -54,28 +87,12 @@
 &lt;select disabled=&quot;disabled&quot; name=&quot;subcategories&quot; id=&quot;subcategories&quot;&gt;
 	&lt;option value=&quot;&quot;&gt;Select a main category first&lt;/option&gt;
 &lt;/select&gt;</pre>
-					<h3>JavaScript</h3>
-<pre class="prettyprint">// Our fake subcategories object literal (most of the times this will be a JSON repsonse from an AJAX call)
-var subcats = {
-	'a': {
-		'aa': 'Subcategory AA',
-		'bb': 'Subcategory BB',
-		'cc': 'Subcategory CC'
-	},
-	'b': {
-		'dd': 'Subcategory DD',
-		'ee': 'Subcategory EE',
-		'ff': 'Subcategory FF'
-	}
-};
-
+					<p>Initiate the plugin like this:</p>
+<pre class="prettyprint">
+// You most likely want to encapsulate the logic within an event handler or in a callback after fetching data from the server
 $('#categories').on('change', function () {
-    if ( !subcats.hasOwnProperty(this.value) ) {
-        return;
-    }
-    $('#subcategories').populate( subcats[this.value] );
+    $('#subcategories').populate({key: value});
 });</pre>
-				<p><em>Please note that you most likely also want to listen to the keyup event, this way keyboard minded users will benefit as well.</em></p>
 			</div>
 			<div class="tab-pane" id="demos">			
 				<h2>Demos</h2>
@@ -211,6 +228,24 @@ $('#categories').on('change', function () {
            $(this).attr('disabled', 'disabled').append('&lt;option&gt;no subcategories available&lt;/option&gt;');
        }
     }
+});</pre>
+					</fieldset>
+				</form>
+				<form method="POST">
+					<fieldset>
+						<h3>Handle JSON response via AJAX</h3>
+						<select name="categories" id="categories8">
+							<option value="">Main categories</option>
+							<option value="a">Category A</option>
+							<option value="b">Category B</option>
+						</select>
+						<select disabled="disabled" name="subcategories" id="subcategories8">
+							<option value="">Select a main category first</option>
+						</select>
+<pre class="prettyprint">$('#categories8').on('change', function () {
+    $.post('http://boye.e-sites.nl/jsend/xhr.php?m=populate', {cat: this.value}, function (resp) {
+        $('#subcategories8').populate(resp.data.subcats);
+    });
 });</pre>
 					</fieldset>
 				</form>
