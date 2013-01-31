@@ -69,26 +69,26 @@
 
 			return this.each(function () {
 				var o = $.extend(defaults, options),
-					self = this;
+					self = this,
+					$self = $(self);
 
 				// <select> elements only
 				if ( self.nodeName === 'SELECT' ) {
 
-					// Inject nodes					
-					$(self)
-						.find((o.exclude ? 'option:not()' : 'option'))
+					// Inject nodes
+					$self
+						.find((o.exclude ? 'option:not(' + o.exclude + ')' : 'option'))
 						.remove()
 						.end()
 						.append(opts)
 						.removeAttr('disabled');
 					
 					// Apply filter
-					if ( o.select ) {
-						$(self)
-							.children()
+					if ( o.select !== null ) {
+						$(self.options)
 							.removeAttr('selected')
 							.filter(o.select)
-							.attr('selected', 'selected');
+							.attr('selected', 'selected');							
 					}
 
 					// Invoke callback

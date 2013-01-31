@@ -41,20 +41,54 @@
 			<div class="tab-content">
 				<div class="tab-pane active" id="home">
 					<p>We have all used them, <code>&lt;select&gt;</code> elements that are populated by selecting the value of another <code>&lt;select&gt;</code> element. I found myself writing this logic over and over again, so I decided to put together this small jQuery plugin as abstraction.</p>
+					<h2>Options</h2>
+					<p>Populate accepts two arguments. The actual data that needs to be injected into the DOM and optionally an object with options.</p>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Property</th>
+								<th>Type</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>exclude</td>
+								<td><code>{string}</code></td>
+								<td>Exclude <code>&lt;option&gt;</code> nodes from being removed, e.g. the first node which could act as placeholder.</td>
+							</tr>
+							<tr>
+								<td>select</td>
+								<td><code>{string}</code></td>
+								<td>Select an <code>&lt;option&gt;</code> node after populating the <code>&lt;select&gt;</code> element. This property will also accept a valid jQuery selector like <code>:first:</code> or <code>:eq(1)</code>.</td>
+							</tr>
+							<tr>
+								<td>onPopulate</td>
+								<td><code>{object}</code></td>
+								<td>Callback that will be dispatched after populating the <code>&lt;select&gt;</code> element. The first argument will be an array with the actual option nodes, this means that you could easily write some logic to handle an empty result set. Also, the <code>this</code> context refers to the actual <code>&lt;select&gt;</code> element that is being populated.</td>
+							</tr>
+						</tbody>
+					</table>
+<pre class="prettyprint">$('#selector').populate({key:value} , {
+    exclude: ':first',
+    select: ':eq(2)',
+    onPopulate: function (nodes) {}
+});</pre>
+					<h2>Example</h2>
 					<p>Let me show you a prime example of a dynamically populated <code>&lt;select&gt;</code>:</p>
 				<form method="POST">
 					<fieldset>
-						<select name="categories" id="categories8">
+						<select name="categories" id="categories9" class="categories8">
 							<option value="">Main categories</option>
 							<option value="a">Category A</option>
 							<option value="b">Category B</option>
 						</select>
-						<select disabled="disabled" name="subcategories" id="subcategories8">
+						<select disabled="disabled" name="subcategories" id="subcategories9">
 							<option value="">Select a main category first</option>
 						</select>
 						<p>With <em>Populate</em> you can achieve this as such:</p>
 <pre class="prettyprint">$('#categories').on('change', function () {	
-    $.post('http://boye.e-sites.nl/jsend/xhr.php?m=populate', {cat: this.value}, function (resp) {
+    $.post('xhr.php', {cat: this.value}, function (resp) {
         $('#subcategories').populate(resp.data.subcats , {
             onPopulate: function (opts) {
                 // Handle empty results
@@ -111,8 +145,8 @@ $('#categories').on('change', function () {
 							<option value="">Select a main category first</option>
 						</select>
 <pre class="prettyprint">$('#subcategories').populate({
-    'key1': 'value1',
-    'key2': 'value2'
+	'key1': 'value1',
+	'key2': 'value2'
 });</pre>
 					</fieldset>
 				</form>
@@ -166,10 +200,10 @@ $('#categories').on('change', function () {
 						</select>
 						<input type="submit" value="Submit form" disabled="disabled" class="btn">
 <pre class="prettyprint">$('#subcategories4').populate( subcats, {
-    onPopulate: function () {
-        // `this` is a reference to the target element
-        $(this).next().removeAttr('disabled');
-    }
+	onPopulate: function () {
+		// `this` is a reference to the target element
+		$(this).next().removeAttr('disabled');
+	}
 });</pre>
 					</fieldset>
 				</form>
@@ -188,7 +222,7 @@ $('#categories').on('change', function () {
 							<option value="">Select a main category first</option>
 						</select>
 <pre class="prettyprint">$('#subcategories5').populate( subcats, {
-    select: ':eq(1)'
+	select: ':eq(1)'
 });</pre>
 					</fieldset>
 				</form>
@@ -207,7 +241,7 @@ $('#categories').on('change', function () {
 							<option value="">Select a main category first (exclude)</option>
 						</select>
 <pre class="prettyprint">$('#subcategories6').populate( subcats, {
-    exclude: ':first'
+	exclude: ':first'
 });</pre>
 					</fieldset>
 				</form>
@@ -222,19 +256,19 @@ $('#categories').on('change', function () {
 							<option value="">Select a main category first</option>
 						</select>
 <pre class="prettyprint">$('#subcategories7').populate( subcats, {
-    onPopulate: function (opts) {
-    	// Opts is a reference to the result set (always an array)
-       if ( !opts.length ) {
-           $(this).attr('disabled', 'disabled').append('&lt;option&gt;no subcategories available&lt;/option&gt;');
-       }
-    }
+	onPopulate: function (opts) {
+		// Opts is a reference to the result set (always an array)
+	   if ( !opts.length ) {
+		   $(this).attr('disabled', 'disabled').append('&lt;option&gt;no subcategories available&lt;/option&gt;');
+	   }
+	}
 });</pre>
 					</fieldset>
 				</form>
 				<form method="POST">
 					<fieldset>
 						<h3>Handle JSON response via AJAX</h3>
-						<select name="categories" id="categories8">
+						<select name="categories" id="categories8" class="categories8">
 							<option value="">Main categories</option>
 							<option value="a">Category A</option>
 							<option value="b">Category B</option>
@@ -243,9 +277,9 @@ $('#categories').on('change', function () {
 							<option value="">Select a main category first</option>
 						</select>
 <pre class="prettyprint">$('#categories8').on('change', function () {
-    $.post('http://boye.e-sites.nl/jsend/xhr.php?m=populate', {cat: this.value}, function (resp) {
-        $('#subcategories8').populate(resp.data.subcats);
-    });
+	$.post('xhr.php', {cat: this.value}, function (resp) {
+		$('#subcategories8').populate(resp.data.subcats);
+	});
 });</pre>
 					</fieldset>
 				</form>
@@ -258,7 +292,7 @@ $('#categories').on('change', function () {
 		</div>	
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 		<script src="http://frontend.e-sites.nl/library/min/?g=js&1355489554"></script>
-		<script src="jquery.populate.js"></script>
+		<script src="jquery.populate.min.js"></script>
 		<script src="assets/events.js"></script>
 	</body>
 </html>

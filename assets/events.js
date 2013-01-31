@@ -106,9 +106,10 @@
 		});
 
 		// Ajax example
-		$('#categories8').on('change', function () {
+		$('.categories8').on('change', function () {
+			var $self = $(this);
 			$.post('http://boye.e-sites.nl/jsend/xhr.php?m=populate', {cat: this.value}, function (resp) {
-				$('#subcategories8').populate(resp.data.subcats, {
+				$self.next().populate(resp.data.subcats, {
 					onPopulate: function (opts) {
 						if ( !opts.length ) {
 							$(this).attr('disabled', 'disabled').append('<option>no subcategories available</option>');
