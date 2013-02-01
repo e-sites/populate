@@ -3,33 +3,34 @@
     "title": "jQuery Populate",
     "description": "A small yet useful jQuery plugin that populates select elements with option nodes.",
     "keywords": [
-	"populate",
-	"options",
-	"select"
+        "populate",
+        "options",
+        "select",
+        "form"
     ],
     "version": "0.1.0",
     "author": {
-	"name": "Boye Oomens (e-sites)",
-	"url": "http://www.linkedin.com/in/boyeoomens"
+        "name": "Boye Oomens (e-sites)",
+        "url": "http://www.linkedin.com/in/boyeoomens"
     },
     "maintainers": [
-	{
-	    "name": "Boye Oomens",
-	    "email": "boye@e-sites.nl",
-	    "url": "http://www.linkedin.com/in/boyeoomens"
-	}
+        {
+            "name": "Boye Oomens",
+            "email": "boye@e-sites.nl",
+            "url": "http://www.linkedin.com/in/boyeoomens"
+        }
     ],
     "licenses": [
-	{
-	    "type": "MIT",
-	    "url": "https://github.com/e-sites/populate/blob/master/LICENSE-MIT.txt"
-	}
+        {
+            "type": "MIT",
+            "url": "https://github.com/e-sites/populate/blob/master/LICENSE-MIT.txt"
+        }
     ],
     "bugs": "https://github.com/e-sites/populate/issues",
     "homepage": "https://github.com/e-sites/populate",
     "docs": "https://github.com/e-sites/populate",
     "download": "http://code.jquery.com/#populate",
     "dependencies": {
-	"jquery": ">=1.6"
+        "jquery": ">=1.6"
     }
 }

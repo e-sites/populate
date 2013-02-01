@@ -21,7 +21,7 @@
 					select: null,
 					exclude: null,
 					opPopulate: null
-				},			
+				},
 				optionNode = '<option value="{key}">{value}</option>',
 				htmlExpr = /^(?:(<[\w\W]+>)[^>]*|#([\w-]*))$/,
 				opts = [],
@@ -88,7 +88,7 @@
 						$(self.options)
 							.removeAttr('selected')
 							.filter(o.select)
-							.attr('selected', 'selected');							
+							.attr('selected', 'selected');
 					}
 
 					// Invoke callback
