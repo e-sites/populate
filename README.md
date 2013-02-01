@@ -4,6 +4,8 @@ Populate
 We have all used them, `<select>` elements that are populated by selecting the value of another `<select>`.
 I found myself writing this logic over and over again, so I decided to put together this small jQuery plugin as abstraction.
 
+More info, demos, documentation and unit tests at: http://github.e-sites.nl/populate/
+
 ## Options
 Populate accepts two arguments. The actual data that needs to be injected into the DOM and optionally an object with options.</p>
 <table class="table">
