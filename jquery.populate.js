@@ -3,7 +3,7 @@
  * This can be either an object literal, a HTML fragment or a serialized string
  *
  * @author   Boye Oomens <boye@e-sites.nl>
- * @version  0.1.1
+ * @version  0.1.2
  * @param   {object|string} nodes actual options nodes that need to be injected
  * @param   {object} options custom config options
  * @return  {object} jQuery
