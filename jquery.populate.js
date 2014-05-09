@@ -20,7 +20,7 @@
 			var defaults = {
 					select: null,
 					exclude: null,
-					opPopulate: null,
+					onPopulate: null,
 					//if true, the plugin will re-select the same option that was selected before, if
 					//an option with the same value still exists after re-populating the options
 					keepExistingSelection: false
