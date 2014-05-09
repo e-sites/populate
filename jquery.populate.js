@@ -20,7 +20,10 @@
 			var defaults = {
 					select: null,
 					exclude: null,
-					opPopulate: null
+					opPopulate: null,
+					//if true, the plugin will re-select the same option that was selected before, if
+					//an option with the same value still exists after re-populating the options
+					keepExistingSelection: false
 				},
 				optionNode = '<option value="{key}">{value}</option>',
 				htmlExpr = /^(?:(<[\w\W]+>)[^>]*|#([\w-]*))$/,
@@ -74,6 +77,10 @@
 
 				// <select> elements only
 				if ( self.nodeName === 'SELECT' ) {
+					if (o.keepExistingSelection) {
+						//store current value so we can re-select it after populating
+						var currentVal = $self.val();
+					}
 
 					// Inject nodes
 					$self
@@ -89,6 +96,10 @@
 							.removeAttr('selected')
 							.filter(o.select)
 							.attr('selected', 'selected');
+					}
+					
+					if (o.keepExistingSelection && currentVal) {
+						$self.val(currentVal);
 					}
 
 					// Invoke callback
